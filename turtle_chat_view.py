@@ -18,6 +18,8 @@ from turtle_chat_widgets import Button, TextInput
 #Make a class called TextBox, which will be a subclass of TextInput.
 class TextBox(TextInput):
     def draw_box(self):
+        #print (" in draw box")
+        turtle.clear()
         turtle.penup()
         turtle.goto(self.pos)
         turtle.pendown()
@@ -25,8 +27,6 @@ class TextBox(TextInput):
         turtle.goto(self.width, self.height)
         turtle.goto(self.width, 0)
         turtle.goto(self.pos)
-
-        
 
 
                 
@@ -37,11 +37,16 @@ class TextBox(TextInput):
 #draw_box
 #write_msg
     def write_msg(self):
+        #print ("in write message")
+        self.writer.clear()
+        self.writer.hideturtle()
         self.setup_listeners()
-        print(self.new_msg)
+        #print(self.new_msg)
+        self.writer.goto(5,self.height -10)
         self.writer.write(self.new_msg)
         
-tb = TextBox()
+tb=TextBox()
+
 #
 #Hints:
 #1. in draw_box, you will draw (or stamp) the space on which the user's input
@@ -64,6 +69,21 @@ tb = TextBox()
 #####################################################################################
 #                                  SendButton                                       #
 #####################################################################################
+class SendButton(Button):
+    def __init__(self, my_turtle=None, shape=None, pos=(0,0), client=None):
+        super(SendButton, self).__init__(my_turtle=None, shape=None, pos=(0,0))
+        self.client = client
+        
+    def fun(self, x=None, y=None):
+        #print type(self.view)
+        self.client.send("Hi")
+        
+client = Client()
+s = SendButton(client=client)
+
+
+
+
 #Make a class called SendButton, which will be a subclass of Button.
 #Button is an abstract class with one abstract method: fun.
 #fun gets called whenever the button is clicked.  It's jobs will be to
@@ -81,7 +101,7 @@ tb = TextBox()
 
 
 ##################################################################
-#                             View                               #
+#                             View                              " #
 ##################################################################
 #Make a new class called View.  It does not need to have a parent
 #class mentioned explicitly.
@@ -147,7 +167,7 @@ class View:
         clear the textbox text display (hint: use the clear_msg method).
         It should call self.display_msg() to cause the message
         display to be updated.
-        '''
+        '''     
         pass
 
     def get_msg(self):

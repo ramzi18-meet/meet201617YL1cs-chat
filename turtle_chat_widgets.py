@@ -84,7 +84,7 @@ class TextInput(metaclass=ABCMeta):
         self.new_msg='' #This string stores text stream going into text ox.
         self.pos=pos
         self.writer=turtle.clone()
-        self.writer.hideturtle()
+        #self.writer.hideturtle()
         self.writer.penup()
         #Move writer to location where text starts.
         self.writer.goto(-self.width/2+10+self.pos[0],self.pos[1]-self.height/2+20)
