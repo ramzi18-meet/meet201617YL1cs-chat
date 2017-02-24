@@ -27,9 +27,7 @@ class TextBox(TextInput):
         turtle.goto(self.width, self.height)
         turtle.goto(self.width, 0)
         turtle.goto(self.pos)
-
-
-                
+          
     
 #Because TextInput is an abstract class, you must implement its abstract
 #methods.  There are two:
@@ -37,15 +35,13 @@ class TextBox(TextInput):
 #draw_box
 #write_msg
     def write_msg(self):
-        #print ("in write message")
+        print ("in write message")
         self.writer.clear()
         self.writer.hideturtle()
         self.setup_listeners()
-        #print(self.new_msg)
         self.writer.goto(5,self.height -10)
         self.writer.write(self.new_msg)
         
-tb=TextBox()
 
 #
 #Hints:
@@ -70,17 +66,13 @@ tb=TextBox()
 #                                  SendButton                                       #
 #####################################################################################
 class SendButton(Button):
-    def __init__(self, my_turtle=None, shape=None, pos=(0,0), client=None):
-        super(SendButton, self).__init__(my_turtle=None, shape=None, pos=(0,0))
-        self.client = client
+    def __init__(self, my_turtle=None, shape=None, pos=(0,0), view=None):
+        super(SendButton, self).__init__(my_turtle=None, shape=None, pos=(0,-150))
+        self.view = view
         
     def fun(self, x=None, y=None):
         #print type(self.view)
-        self.client.send("Hi")
-        
-client = Client()
-s = SendButton(client=client)
-
+        self.view.send_msg()
 
 
 
@@ -123,17 +115,22 @@ class View:
         ###
         #Store the username and partner_name into the instance.
         ###
+        self.username = username
+        self.partner_name = partner_name
+        
 
-        #Make a new client object and store it in this instance.
+        #Make a new client object and store it in this i4nstance.
+        self.my_client = Client()
 
         #Set screen dimensions using turtle.setup
         #You can get help on this function, as with other turtle functions,
         #by typing
-        #
+        #4
         #   import turtle
         #   help(turtle.setup)
         #
         #at the Python shell.
+        turtle.setup(width=self._SCREEN_WIDTH, height=self._SCREEN_HEIGHT)
 
         #This list will store all of the messages.
         #You can add strings to the front of the list using
@@ -147,16 +144,20 @@ class View:
         #You can use the clear() and write() methods to erase
         #and write messages for each
         ###
-
+        self.last_message = turtle.clone()
+        
         ###
         #Create a TextBox instance and a SendButton instance and
         #Store them inside of this instance
         ###
+        self.send_button = SendButton(view=self)
+        self.text_box = TextBox()
 
         ###
         #Call your setup_listeners() function, if you have one,
         #and any other remaining setup functions you have invented.
         ###
+        self.setup_listeners()
 
     def send_msg(self):
         '''
@@ -167,11 +168,15 @@ class View:
         clear the textbox text display (hint: use the clear_msg method).
         It should call self.display_msg() to cause the message
         display to be updated.
-        '''     
-        pass
+        '''
+        print("self.text_box.new_msg= ", self.text_box.new_msg)
+        self.my_client.send(self.text_box.new_msg)
+        self.msg_queue.append(self.text_box.new_msg)
+        self.text_box.clear_msg()
+        self.display_msg()
 
     def get_msg(self):
-        return self.textbox.get_msg()
+        return self.text_box.get_msg()
 
     def setup_listeners(self):
         '''
@@ -184,7 +189,8 @@ class View:
 
         Then, it can call turtle.listen()
         '''
-        pass
+        turtle.onkeypress(self.send_button.fun,'Return')
+        turtle.listen()
 
     def msg_received(self,msg):
         '''
@@ -195,19 +201,23 @@ class View:
         :param msg: a string containing the message received
                     - this should be displayed on the screen
         '''
-        print(msg) #Debug - print message
-        show_this_msg=self.partner_name+' says:\r'+ msg
+        print("here: " + msg) #Debug - print message
+        show_this_msg = self.partner_name+' says:\r'+ msg
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
         #
         #Then, call the display_msg method to update the display
+        self.msg_queue.insert(0, show_this_msg)
+        self.display_msg()
 
     def display_msg(self):
         '''
         This method should update the messages displayed in the screen.
         You can get the messages you want from self.msg_queue
         '''
-        pass
+        self.last_message.clear()
+        self.last_message.write(self.msg_queue[0])
+
 ##############################################################
 ##############################################################
 
@@ -223,6 +233,7 @@ if __name__ == '__main__':
     def check() :
         msg_in=my_view.my_client.receive()
         if not(msg_in is None):
+            print("in name: " + msg_in)
             if msg_in==my_view.my_client._END_MSG:
                 print('End message received')
                 sys.exit()
