@@ -23,7 +23,7 @@ class TextBox(TextInput):
         turtle.penup()
         turtle.goto(self.pos)
         turtle.pendown()
-        turtle.goto(0, self.height)
+        turtle.goto(0,self.height)
         turtle.goto(self.width, self.height)
         turtle.goto(self.width, 0)
         turtle.goto(self.pos)
@@ -67,7 +67,7 @@ class TextBox(TextInput):
 #####################################################################################
 class SendButton(Button):
     def __init__(self, my_turtle=None, shape=None, pos=(0,0), view=None):
-        super(SendButton, self).__init__(my_turtle=None, shape=None, pos=(0,-150))
+        super(SendButton, self).__init__(my_turtle=None, shape=None, pos=(100,-20))
         self.view = view
         
     def fun(self, x=None, y=None):
@@ -103,7 +103,7 @@ class SendButton(Button):
 ##################################################################
 class View:
     _MSG_LOG_LENGTH=5 #Number of messages to retain in view
-    _SCREEN_WIDTH=300
+    _SCREEN_WIDTH=500
     _SCREEN_HEIGHT=600
     _LINE_SPACING=round(_SCREEN_HEIGHT/2/(_MSG_LOG_LENGTH+1))
 
