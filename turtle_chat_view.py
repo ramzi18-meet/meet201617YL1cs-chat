@@ -10,8 +10,10 @@ import turtle
 from turtle_chat_client import Client
 from turtle_chat_widgets import Button, TextInput
 #####################################################################################
+ijri=turtle.Screen()
+ijri.bgpic('ijri.gif')
 #####################################################################################
-
+turtle.hideturtle()
 #####################################################################################
 #                                   TextBox                                         #
 #####################################################################################
@@ -215,8 +217,9 @@ class View:
         This method should update the messages displayed in the screen.
         You can get the messages you want from self.msg_queue
         '''
+        self.last_message.goto(0,100)
         self.last_message.clear()
-        self.last_message.write(self.msg_queue[0])
+        self.last_message.write(self.msg_queue[-1])
 
 ##############################################################
 ##############################################################
